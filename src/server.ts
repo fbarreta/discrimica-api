@@ -1,6 +1,8 @@
 import * as express from 'express';
+import * as cors from 'cors';
 const app = express();
-const port = 3000;
+app.use(cors());
+const port = 8080;
 import * as bodyParser from 'body-parser';
 
 import Match from './model/Match';
@@ -24,6 +26,11 @@ app.get('/start', (req, res) => {
 
 app.get('/getWord', (req, res) => {
     res.send(activeMatch.getWord());
+});
+
+app.get('/getPlayer/:user_id', (req, res) => {
+    const userId = req.params.user_id;
+    res.send(activeMatch.getPlayer(userId));
 });
 
 app.post('/addPlayer', urlencodedParser, (req, res) => {

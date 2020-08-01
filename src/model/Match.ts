@@ -16,7 +16,7 @@ export default class Match {
         this.players = [];
         this.teams = [];
         this.allWords = [];
-        this.start();
+        // this.start();
     }
 
     start() {
@@ -44,6 +44,12 @@ export default class Match {
 
     addPlayer(player: Player) {
         this.players.push(player);
+    }
+
+    getPlayer(playerId: string) {
+        return this.players.find((player) => {
+            return player.id === playerId
+        });
     }
 
     addTeam(team: Team) {
