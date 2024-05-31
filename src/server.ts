@@ -2,20 +2,18 @@ import * as express from 'express';
 import * as cors from 'cors';
 const app = express();
 app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 const port = 8080;
-import * as bodyParser from 'body-parser';
 
 import Match from './model/Match';
 import Player from './model/Player';
 import Word from './model/Word';
 import Team from './model/Team';
 
-// Create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
 let activeMatch: Match = new Match();
 
-app.get('/', (req, res) => {
+app.get('/info', (req, res) => {
     res.send(activeMatch);
 });
 
@@ -33,23 +31,23 @@ app.get('/getPlayer/:user_id', (req, res) => {
     res.send(activeMatch.getPlayer(userId));
 });
 
-app.post('/addPlayer', urlencodedParser, (req, res) => {
+app.post('/addPlayer', (req, res) => {
     const player = new Player(req.body.name);
     activeMatch.addPlayer(player);
     res.send(player)
 });
 
-app.post('/guessWord', urlencodedParser, (req, res) => {
+app.post('/guessWord', (req, res) => {
     activeMatch.guessWord(req.body.id);
     res.send(activeMatch.allWords)
 });
 
-app.post('/shuffle', urlencodedParser, (req, res) => {
+app.post('/shuffle', (req, res) => {
     activeMatch.shuffleTeams();
     res.send(activeMatch)
 });
 
-app.post('/addWord/:user_id', urlencodedParser, (req, res) => {
+app.post('/addWord/:user_id', (req, res) => {
     const userId = req.params.user_id;
     const word = new Word(req.body.word.toUpperCase());
     const player = activeMatch.players.find(x => x.id === userId);
