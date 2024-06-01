@@ -1,10 +1,15 @@
 import * as express from 'express';
+const { createServer } = require('node:http');
+import { Server } from 'socket.io';
 import * as cors from 'cors';
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const port = 8080;
+
+const server = createServer(app);
+const io = new Server(server, {cors: {origin: ['http://localhost:3000']}});
 
 import Match from './model/Match';
 import Player from './model/Player';
@@ -34,6 +39,7 @@ app.get('/getPlayer/:user_id', (req, res) => {
 app.post('/addPlayer', (req, res) => {
     const player = new Player(req.body.name);
     activeMatch.addPlayer(player);
+    io.emit('add-player', activeMatch);
     res.send(player)
 });
 
@@ -60,3 +66,6 @@ app.post('/addWord/:user_id', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+server.listen(3001, () => {
+    console.log('server running at http://localhost:3001');
+  });
