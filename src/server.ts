@@ -59,6 +59,7 @@ app.post('/addWord/:user_id', (req, res) => {
     const player = activeMatch.players.find(x => x.id === userId);
     if(player) {
         player.addWord(word);
+        io.emit('add-player', activeMatch);
         res.send(word)
     } else {
         res.send('Player not found ...')
