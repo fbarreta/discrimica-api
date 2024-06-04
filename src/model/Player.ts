@@ -17,6 +17,10 @@ export default class Player {
         this.words.push(word);
     }
 
+    removeWord(word: Word) {
+        this.words = this.words.filter(x => x.id !== word.id);
+    }
+
     clearWords() {
         this.words = [];
     }

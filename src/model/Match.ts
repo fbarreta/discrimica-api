@@ -10,36 +10,48 @@ export default class Match {
     activeTeam: Team;
     teams: Team[];
     allWords: Word[];
+    started: boolean;
 
     constructor() {
         this.id = uuid.v4();
         this.players = [];
         this.teams = [];
         this.allWords = [];
-        // this.start();
+        this.started = false;
+        this.start();
     }
 
     start() {
         const testPlayer: Player = new Player('Felipe');
-        testPlayer.id = '2bbe5126-bf3f-43d2-b9ac-01cb2f4c07c5';
-        testPlayer.addWord(new Word('bezerro'));
-        testPlayer.addWord(new Word('lagarto'));
+        testPlayer.id = '42848cd5-ed02-4a36-a115-b2e62238d931';
+        testPlayer.addWord(new Word('word1'));
+        testPlayer.addWord(new Word('word2'));
         this.addPlayer(testPlayer);
         this.addPlayer(new Player('Lidiane'));
-        this.players[1].addWord(new Word('gazebo'));
-        this.players[1].addWord(new Word('jocoso'));
+        this.players[1].addWord(new Word('word3'));
+        this.players[1].addWord(new Word('word4'));
         this.addPlayer(new Player('Gabriel'));
+        this.players[2].addWord(new Word('word5'));
+        this.players[2].addWord(new Word('word6'));
         this.addPlayer(new Player('Ricardo'));
+        this.players[3].addWord(new Word('word7'));
+        this.players[3].addWord(new Word('word8'));
         this.addPlayer(new Player('Thais'));
+        this.players[4].addWord(new Word('word9'));
+        this.players[4].addWord(new Word('word10'));
         this.addPlayer(new Player('Rodrigo'));
+        this.players[5].addWord(new Word('word11'));
+        this.players[5].addWord(new Word('word12'));
         this.addPlayer(new Player('Maria Clara'));
+        this.players[6].addWord(new Word('word13'));
+        this.players[6].addWord(new Word('word14'));
 
         this.addTeam(new Team("Team 1"));
         this.addTeam(new Team("Team 2"));
 
-        this.shuffleTeams();
+        // this.shuffleTeams();
 
-        this.activeTeam = this.teams[0];
+        // this.activeTeam = this.teams[0];
     }
 
     addPlayer(player: Player) {
@@ -75,6 +87,7 @@ export default class Match {
             this.players.splice(index, 1);
         }
         this.populateWordArray();
+        this.started = true;
     }
 
     populateWordArray() {

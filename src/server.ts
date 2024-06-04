@@ -22,8 +22,9 @@ app.get('/info', (req, res) => {
     res.send(activeMatch);
 });
 
-app.get('/start', (req, res) => {
-    activeMatch = new Match();
+app.post('/start', (req, res) => {
+    activeMatch.start();
+    io.emit('add-player', activeMatch);
     res.send(activeMatch);
 });
 
@@ -50,15 +51,29 @@ app.post('/guessWord', (req, res) => {
 
 app.post('/shuffle', (req, res) => {
     activeMatch.shuffleTeams();
+    io.emit('add-player', activeMatch);
     res.send(activeMatch)
 });
 
-app.post('/addWord/:user_id', (req, res) => {
+app.post('/word/:user_id', (req, res) => {
     const userId = req.params.user_id;
-    const word = new Word(req.body.word.toUpperCase());
+    const word = new Word(req.body.description.toUpperCase());
     const player = activeMatch.players.find(x => x.id === userId);
     if(player) {
         player.addWord(word);
+        io.emit('add-player', activeMatch);
+        res.send(word)
+    } else {
+        res.send('Player not found ...')
+    }
+});
+
+app.delete('/word/:user_id', (req, res) => {
+    const userId = req.params.user_id;
+    const word = req.body;
+    const player = activeMatch.players.find(x => x.id === userId);
+    if(player) {
+        player.removeWord(word);
         io.emit('add-player', activeMatch);
         res.send(word)
     } else {
