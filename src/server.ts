@@ -14,7 +14,6 @@ const io = new Server(server, {cors: {origin: ['http://localhost:3000']}});
 import Match from './model/Match';
 import Player from './model/Player';
 import Word from './model/Word';
-import Team from './model/Team';
 
 let activeMatch: Match = new Match();
 
@@ -26,6 +25,18 @@ app.post('/start', (req, res) => {
     activeMatch.start();
     io.emit('add-player', activeMatch);
     res.send(activeMatch);
+});
+
+app.post('/reset', (req, res) => {
+    activeMatch = new Match();
+    io.emit('add-player', activeMatch);
+    res.send(activeMatch);
+});
+
+app.post('/nextTurn', (req, res) => {
+    const resp = activeMatch.nextTurn();
+    io.emit('add-player', activeMatch);
+    res.send(resp);
 });
 
 app.get('/getWord', (req, res) => {
@@ -44,15 +55,9 @@ app.post('/addPlayer', (req, res) => {
     res.send(player)
 });
 
-app.post('/guessWord', (req, res) => {
-    activeMatch.guessWord(req.body.id);
-    res.send(activeMatch.allWords)
-});
-
-app.post('/shuffle', (req, res) => {
-    activeMatch.shuffleTeams();
-    io.emit('add-player', activeMatch);
-    res.send(activeMatch)
+app.post('/guessWord/:user_id', (req, res) => {
+    const userId = req.params.user_id;
+    res.send(activeMatch.guessWord(userId, req.body.id));
 });
 
 app.post('/word/:user_id', (req, res) => {
