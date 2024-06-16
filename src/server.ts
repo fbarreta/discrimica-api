@@ -24,7 +24,25 @@ app.get('/info', (req, res) => {
 app.post('/start', (req, res) => {
     activeMatch.start();
     io.emit('add-player', activeMatch);
+    const activeTeam = activeMatch.teams[activeMatch.activeTeamIndex];
+    io.emit('player-info', {
+        id: activeMatch.id,
+        started: activeMatch.started,
+        activePlayerId: activeTeam.players[activeTeam.activePlayerIndex].id,
+        wordCount: activeMatch.allWords.length,
+    });
     res.send(activeMatch);
+});
+
+app.get('/status', (req, res) => {
+    const activeTeam = activeMatch.teams[activeMatch.activeTeamIndex];
+    const info = {
+        id: activeMatch.id,
+        started: activeMatch.started,
+        activePlayerId: activeMatch.started ? activeTeam.players[activeTeam.activePlayerIndex].id : null,
+        wordCount: activeMatch.allWords.length,
+    };
+    res.send(info);
 });
 
 app.post('/reset', (req, res) => {
@@ -36,6 +54,14 @@ app.post('/reset', (req, res) => {
 app.post('/nextTurn', (req, res) => {
     const resp = activeMatch.nextTurn();
     io.emit('add-player', activeMatch);
+    const activeTeam = activeMatch.teams[activeMatch.activeTeamIndex];
+    const info = {
+        id: activeMatch.id,
+        started: activeMatch.started,
+        activePlayerId: activeTeam.players[activeTeam.activePlayerIndex].id,
+        wordCount: activeMatch.allWords.length,
+    };
+    io.emit('player-info', info);
     res.send(resp);
 });
 
@@ -57,7 +83,15 @@ app.post('/addPlayer', (req, res) => {
 
 app.post('/guessWord/:user_id', (req, res) => {
     const userId = req.params.user_id;
+    const activeTeam = activeMatch.teams[activeMatch.activeTeamIndex];
     res.send(activeMatch.guessWord(userId, req.body.id));
+    io.emit('add-player', activeMatch);
+    io.emit('player-info', {
+        id: activeMatch.id,
+        started: activeMatch.started,
+        activePlayerId: activeTeam.players[activeTeam.activePlayerIndex].id,
+        wordCount: activeMatch.allWords.length,
+    });
 });
 
 app.post('/word/:user_id', (req, res) => {

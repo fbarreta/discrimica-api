@@ -31,6 +31,8 @@ export default class Match {
     }
 
     start() {
+        this.addTeam(new Team("Team 1"));
+        this.addTeam(new Team("Team 2"));
         this.shuffleTeams();
         this.activeTeamIndex = 0;
     }
@@ -48,9 +50,10 @@ export default class Match {
     }
 
     getPlayer(playerId: string) {
-        return this.players.find((player) => {
+        const player = this.players.find((player) => {
             return player.id === playerId
         });
+        return player ? player : { id: null };
     }
 
     addTeam(team: Team) {
@@ -63,6 +66,7 @@ export default class Match {
 
     private shuffleTeams(){
         const teamQty: number = this.teams.length;
+        const playersBackup = [];
         let teamIndex: number = 0;
         while (this.players.length > 0) {
             let index = Math.floor(Math.random() * this.players.length);
@@ -72,10 +76,12 @@ export default class Match {
             }
 
             this.teams[teamIndex].players.push(this.players[index]);
+            playersBackup.push(this.players[index]);
             teamIndex++;
             this.players.splice(index, 1);
         }
         this.populateWordArray();
+        this.players = [...playersBackup];
         this.started = true;
     }
 
@@ -107,10 +113,12 @@ export default class Match {
             const index = this.allWords.indexOf(word);
             this.allWords.splice(index,1);
             activeTeam.addPoint();
+            let count = this.allWords.length;
             if (this.allWords.length === 0) {
                 this.nextRound();
+                count = 0;
             }
-            return {status: 'success'};
+            return {status: 'success', wordCount: count};
         } else {
             return {status: 'error'};
         }
@@ -130,27 +138,26 @@ export default class Match {
         testPlayer.addWord(new Word('word1'));
         // testPlayer.addWord(new Word('word2'));
         this.addPlayer(testPlayer);
-        this.addPlayer(new Player('Lidiane'));
+        const p2 = new Player('Lidiane');
+        p2.id = 'ee4d7a5a-5361-4d4a-8e0c-0e2249af2e7f';
+        this.addPlayer(p2);
         this.players[1].addWord(new Word('word3'));
         // this.players[1].addWord(new Word('word4'));
-        this.addPlayer(new Player('Gabriel'));
-        this.players[2].addWord(new Word('word5'));
+        // this.addPlayer(new Player('Gabriel'));
+        // this.players[2].addWord(new Word('word5'));
         // this.players[2].addWord(new Word('word6'));
-        this.addPlayer(new Player('Ricardo'));
-        this.players[3].addWord(new Word('word7'));
+        // this.addPlayer(new Player('Ricardo'));
+        // this.players[3].addWord(new Word('word7'));
         // this.players[3].addWord(new Word('word8'));
-        this.addPlayer(new Player('Thais'));
-        this.players[4].addWord(new Word('word9'));
+        // this.addPlayer(new Player('Thais'));
+        // this.players[4].addWord(new Word('word9'));
         // this.players[4].addWord(new Word('word10'));
-        this.addPlayer(new Player('Rodrigo'));
-        this.players[5].addWord(new Word('word11'));
+        // this.addPlayer(new Player('Rodrigo'));
+        // this.players[5].addWord(new Word('word11'));
         // this.players[5].addWord(new Word('word12'));
-        this.addPlayer(new Player('Maria Clara'));
-        this.players[6].addWord(new Word('word13'));
+        // this.addPlayer(new Player('Maria Clara'));
+        // this.players[6].addWord(new Word('word13'));
         // this.players[6].addWord(new Word('word14'));
-
-        this.addTeam(new Team("Team 1"));
-        this.addTeam(new Team("Team 2"));
         // Test data
     }
 }
