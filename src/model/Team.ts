@@ -7,6 +7,7 @@ export default class Team {
     points: number;
     players: Player[];
     activePlayerIndex: number;
+    color: string;
 
     constructor(name: string) {
         this.id = uuid.v4();

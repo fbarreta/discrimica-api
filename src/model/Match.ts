@@ -31,8 +31,12 @@ export default class Match {
     }
 
     start() {
-        this.addTeam(new Team("Team 1"));
-        this.addTeam(new Team("Team 2"));
+        const team1 = new Team("Team 1");
+        team1.color = 'blue';
+        const team2 = new Team("Team 2");
+        team2.color = 'red';
+        this.addTeam(team1);
+        this.addTeam(team2);
         this.shuffleTeams();
         this.activeTeamIndex = 0;
     }
