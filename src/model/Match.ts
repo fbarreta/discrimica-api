@@ -27,7 +27,7 @@ export default class Match {
         this.started = false;
         this.round = 1;
 
-        this.addTestData();
+        // this.addTestData();
     }
 
     start() {
